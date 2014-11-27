@@ -44,31 +44,56 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
- 
-$rules = Array(
-    "preambleInitList" => Array("Honorable Cámara de Diputados",
-    							"La Cámara de Representantes",
-    							"Creación",
-    							"CÁMARA DE SENADORES",
-    							"Modificaciones de la Cámara de Senadores"),
+
+require_once(dirname(__FILE__)."/../utils.php");
+
+class FormulaParser {
     
-    					
-    "preambleEndList" => Array("PROYECTO DE LEY",
-    						   "TEXTO APROBADO",
-    						   "PROYECTO DE LEY SUSTITUTIVO",
-    						   "EXPOSICIÓN DE MOTIVOS", 
-    						   "INFORME",
-							   "Proyecto de Ley"),
-   
-    						   
-    "conclusionsInitList" => Array("Dios guarde a V.E.,",
-    							   "Sala de Sesiones de la Cámara de Representantes",
-    							   "Sala de Sesiones de la Cámara de Senadores",
-    							   "Sala de Sesiones de la Asamblea General",
-								   "Sala de la Comisiòn",
-								   "Sala de la Comisión",
-								   "Sala de la Comisión",
-								   "Montevideo, +[\w ]+\d{4}\.")
-);
+    public $lang, $docType;
+    private $parserRules = array();
+    
+    public function __construct($lang, $docType) {
+        $this->lang = $lang;
+        $this->docType = $docType;
+        $this->dirName = dirname(__FILE__);
+
+        $this->loadConfiguration();
+    }
+
+    public function parse($content, $jsonOutput = FALSE) {
+        $return = array();
+		if($this->lang && $this->docType && !empty($this->parserRules)) {
+			$resolved = resolveRegex($this->parserRules['main'],$this->parserRules,$this->lang, $this->docType, $this->dirName);
+			$success = preg_match_all($resolved['value'], $content, $result, PREG_OFFSET_CAPTURE);
+			if ($success) {
+				//print_r($result);
+				for ($i = 0; $i < $success; $i++) {
+                    $match = $result["enactingFormula"][$i][0];
+                    $offset = $result["enactingFormula"][$i][1];
+					$entry = Array (
+						"enactingFormula" => $match,
+						"start" => $offset,
+                        "end" => $offset+strlen($match)
+					);
+					
+					$return[] = $entry;
+				}
+			}
+		} else {
+			$return = Array('success' => FALSE);
+		}
+
+        $ret = array("response" => $return);
+        if($jsonOutput) {
+            return json_encode($ret);    
+        } else {
+            return $ret;
+        }
+    }
+
+    public function loadConfiguration() {
+        $this->parserRules = importParserConfiguration($this->lang,$this->docType, $this->dirName);
+    }
+}
 
 ?>

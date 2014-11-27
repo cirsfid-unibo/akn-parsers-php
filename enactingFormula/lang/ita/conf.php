@@ -46,29 +46,9 @@
  */
  
 $rules = Array(
-    "preambleInitList" => Array("Honorable Cámara de Diputados",
-    							"La Cámara de Representantes",
-    							"Creación",
-    							"CÁMARA DE SENADORES",
-    							"Modificaciones de la Cámara de Senadores"),
-    
-    					
-    "preambleEndList" => Array("PROYECTO DE LEY",
-    						   "TEXTO APROBADO",
-    						   "PROYECTO DE LEY SUSTITUTIVO",
-    						   "EXPOSICIÓN DE MOTIVOS", 
-    						   "INFORME",
-							   "Proyecto de Ley"),
-   
-    						   
-    "conclusionsInitList" => Array("Dios guarde a V.E.,",
-    							   "Sala de Sesiones de la Cámara de Representantes",
-    							   "Sala de Sesiones de la Cámara de Senadores",
-    							   "Sala de Sesiones de la Asamblea General",
-								   "Sala de la Comisiòn",
-								   "Sala de la Comisión",
-								   "Sala de la Comisión",
-								   "Montevideo, +[\w ]+\d{4}\.")
+
+	"main" => "/({{enactingFormula}})/i",
+	"enactingFormula" => "{{formula}}(\s+(il|la)\s+seguente\s+{{doctype}})?:"
 );
 
 ?>
