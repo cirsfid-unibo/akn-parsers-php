@@ -72,7 +72,7 @@ $rules = Array(
     "item2" => "/(?<![\w\.\,] ){{numitem2}} +{{bodyitem}}/u",
     "numitem1" => "\(*\b[A-Za-z]{1,2}\)",
     "numitem2" => "\(*\b[0-9]{1,2}\)",
-    "bodyitem" => "[\p{L}\p{N}\p{P}\p{S} ]+[\.;]",
+    "bodyitem" => "[\p{L}\p{N}\p{P}\p{S} ]+[\.:;]",
     "hierarchy" => Array("book","title","chapter","section","article","paragraph","item1","item2")
 
 );

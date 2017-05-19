@@ -65,7 +65,6 @@ class BodyParser {
     public function parse($content, $jsonOutput = FALSE) {
     	$return = array();
     	if($this->lang && $this->docType && !empty($this->parserRules)) {
-    		print $this->context;
     		$return = $this->parse_recursive($content, $this->context);
     	} else {
 			$return = Array('success' => FALSE);
