@@ -50,10 +50,10 @@ $rules = Array(
     "roman" => "\b[IVX]+\b",
     "number" => "\d+|{{roman}}+|(U|Ú)NICO",
     "book" => "/(?<![\w\.\,] )(?P<num>({{bookList}})\s*({{number}}\s*[º°\.]*))/",
-    "title" => "/(?<![\w\.\,] )(?P<num>({{titleList}})\s*({{number}})([ -]*{{latino}})?)/",
+    "title" => "/(?<![\w\.\,] )(?P<num>({{titleList}})\s*({{number}})([ -]*{{latino}}\s*[º°\.]*)?)/",
     "section" => "/(?<![\w\.\,] )(?P<num>({{sectionList}})\s*({{number}}\s*[º°\.]*))/",
-    "chapter" => "/(?<![\w\.\,] )(?P<num>({{chapterList}})\s*({{number}})([ -]*{{latino}})?)/",
-    "article" => "/(?<![\w\.\,] )(?P<num>({{articleList}})\s*({{number}}\s*[º°\.]*)([ -]*{{latino}})?)\s*({{heading}})?/",
+    "chapter" => "/(?<![\w\.\,] )(?P<num>({{chapterList}})\s*({{number}})([ -]*{{latino}}\s*[º°\.]*)?)/",
+    "article" => "/(?<![\w\.\,] )(?P<num>({{articleList}})\s*({{number}}\s*[º°\.]*)([ -]*{{latino}}\s*[º°\.]*)?)\s*({{heading}})?/",
 
     "heading" => "\([A-Z][^\(^\)]+\)\.?",
 
