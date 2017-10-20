@@ -51,6 +51,7 @@ $rules = Array(
     	                        "An Act",
                                 "AN ACT",
                                 "Preamble",
+                                "THE EUROPEAN PARLIAMENT AND THE COUNCIL OF THE EUROPEAN UNION,",
                                 ),
 
     "preambleEndList" => Array("The people of", "do enact as follows",
@@ -59,6 +60,7 @@ $rules = Array(
     	                       "Be it enacted by the Senate and House of Representatives of\s+the United States of America in Congress assembled,\s+Americas Cup\s+Act of 2011\.",
                                "Be it enacted by the Senate and House of Representatives of the United States of America in Congress assembled,",
                                "the progress achieved in the field of action set forth above\.",
+                               "HAVE ADOPTED THIS REGULATION:",
     	                       ),
 
     "conclusionsInitList" => Array("Approved[\s\w\d,]+\.")

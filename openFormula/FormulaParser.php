@@ -45,22 +45,55 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-$rules = Array(
+require_once(dirname(__FILE__)."/../utils.php");
 
-#"Be it enacted by the Senate and House of Representatives of\s+the United States of America in Congress assembled,\s+Americas Cup\s+Act of 2011\."
+class FormulaParser {
 
+    public $lang, $docType;
+    private $parserRules = array();
 
-	"main" => "/{{enactingFormula}}/i",
-	"enactingFormula" => Array("{{init}}.+{{ending}}:?",
-		                       "HAVE ADOPTED THIS REGULATION:"
-		                       ),
+    public function __construct($lang, $docType) {
+        $this->lang = $lang;
+        $this->docType = $docType;
+        $this->dirName = dirname(__FILE__);
 
-	"init" => Array("[Bb]e it enacted",
-		            ),
+        $this->loadConfiguration();
+    }
 
-	"ending" => Array("as follows","the United States of America in Congress assembled,",
-		              ),
+    public function parse($content, $jsonOutput = FALSE) {
+        $return = array();
+		if($this->lang && $this->docType && !empty($this->parserRules)) {
+			$resolved = resolveRegex($this->parserRules['main'],$this->parserRules,$this->lang, $this->docType, $this->dirName);
+			$success = preg_match_all($resolved['value'], $content, $result, PREG_OFFSET_CAPTURE);
+			if ($success) {
+				//print_r($result);
+				for ($i = 0; $i < $success; $i++) {
+                    $match = $result["openFormula"][$i][0];
+                    $offset = $result["openFormula"][$i][1];
+					$entry = Array (
+						"openFormula" => $match,
+						"start" => $offset,
+                        "end" => $offset+strlen($match)
+					);
 
-);
+					$return[] = $entry;
+				}
+			}
+		} else {
+			$return = Array('success' => FALSE);
+		}
+
+        $ret = array("response" => $return);
+        if($jsonOutput) {
+            return json_encode($ret);
+        } else {
+            return $ret;
+        }
+    }
+
+    public function loadConfiguration() {
+        $this->parserRules = importParserConfiguration($this->lang,$this->docType, $this->dirName);
+    }
+}
 
 ?>

@@ -45,22 +45,14 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-$rules = Array(
 
-#"Be it enacted by the Senate and House of Representatives of\s+the United States of America in Congress assembled,\s+Americas Cup\s+Act of 2011\."
+require_once('CRParser.php');
 
+$debug = isset($_GET['debug']) ? true : false;
+$string = stripcslashes(isset($_POST['s']) ? $_POST['s'] : "");
+$format = isset($_POST['f']) ? $_POST['f'] : "json";
+$voc = isset($_POST['l']) ? $_POST['l'] : "standard";
 
-	"main" => "/{{enactingFormula}}/i",
-	"enactingFormula" => Array("{{init}}.+{{ending}}:?",
-		                       "HAVE ADOPTED THIS REGULATION:"
-		                       ),
-
-	"init" => Array("[Bb]e it enacted",
-		            ),
-
-	"ending" => Array("as follows","the United States of America in Congress assembled,",
-		              ),
-
-);
-
+$parser = new CRParser($voc);
+echo $parser->parse($string, TRUE);
 ?>

@@ -45,22 +45,88 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-$rules = Array(
+class CRParser {
 
-#"Be it enacted by the Senate and House of Representatives of\s+the United States of America in Congress assembled,\s+Americas Cup\s+Act of 2011\."
+    public $lang;
+    private $patterns = array();
+
+    public function __construct($lang) {
+        $this->lang = $lang;
+        $this->loadConfiguration($lang);
+    }
 
 
-	"main" => "/{{enactingFormula}}/i",
-	"enactingFormula" => Array("{{init}}.+{{ending}}:?",
-		                       "HAVE ADOPTED THIS REGULATION:"
-		                       ),
+    public function loadConfiguration() {
+        global $patterns;
 
-	"init" => Array("[Bb]e it enacted",
-		            ),
+		$digit = "(?:\d+[-]?\w*)";
+		$roman = "(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})";
 
-	"ending" => Array("as follows","the United States of America in Congress assembled,",
-		              ),
+		$number = $digit;
 
-);
+		$patterns = array(
+			"recital" => "/(?P<num>\($number\))\s*\b[A-Z][a-z]+\b/",
+		);
+
+		if (isset($localpatterns)) {
+			$patterns = array_merge($localpatterns,$patterns);
+		}
+
+        $this->patterns = $patterns;
+    }
+
+
+    public function parse($content, $jsonOutput = FALSE) {
+        $return = array();
+		$preg_result = array();
+		$element = array();
+		$success = false ;
+		while (!$success && $element = each($this->patterns)) {
+			$success = 	preg_match_all($element['value'], $content, $n) ;
+		}
+
+		if ($success) {
+				$return['recitals']=array();
+				$tmpResult = array();
+				$recitals = $n['0'];
+				$recitals_nums = $n['1'];
+				for($i=0;$i<count($recitals);$i++){
+					$tmp = array();
+					$recital = $recitals[$i];
+					$recitals_num = $recitals_nums[$i];
+					$recital_pos = strpos($content,$recital);
+					$recital_str = '';
+					if($i+1<count($recitals)){
+						$nextPos = strpos($content,$recitals[$i+1]);
+						$len = $nextPos-$recital_pos;
+						$recital_str = substr($content,$recital_pos,$len);
+						$tmp['len'] = $nextPos-$recital_pos;
+					}else{
+						$recital_str = substr($content,$recital_pos);
+					}
+					$tmp['str'] = $recital_str;
+					$tmp['pos'] = $recital_pos;
+					$tmp['recital'] = $recital;
+
+					$tmpResult[] = $tmp;
+
+					$return['recitals'][] = array("num" => $recitals_num, "str" => $recital_str);
+				}
+
+				$citations = substr($content,0,$tmpResult[0]['pos']);
+				if($citations != ""){
+
+					$return['citations'] = explode(",",$citations);
+				}
+		}
+
+        $ret = array("response" => $return);
+        if($jsonOutput) {
+            return json_encode($ret);
+        } else {
+            return $ret;
+        }
+    }
+}
 
 ?>
