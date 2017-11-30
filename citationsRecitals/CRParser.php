@@ -53,6 +53,11 @@ class CRParser {
     public function __construct($lang) {
         $this->lang = $lang;
         $this->loadConfiguration($lang);
+        $this->blacklist = Array(
+        	" Whereas:  ",
+        	"THE EUROPEAN PARLIAMENT AND THE COUNCIL OF THE EUROPEAN UNION",
+        	"HAVE ADOPTED THIS REGULATION:",
+        	);
     }
 
 
@@ -102,7 +107,7 @@ class CRParser {
 						$recital_str = substr($content,$recital_pos,$len);
 						$tmp['len'] = $nextPos-$recital_pos;
 					}else{
-						$recital_str = substr($content,$recital_pos);
+						$recital_str = substr($content,$recital_pos, -strlen($this->blacklist[2]));
 					}
 					$tmp['str'] = $recital_str;
 					$tmp['pos'] = $recital_pos;
@@ -111,12 +116,17 @@ class CRParser {
 					$tmpResult[] = $tmp;
 
 					$return['recitals'][] = array("num" => $recitals_num, "str" => $recital_str);
+					$return['recitals_intro'] = $this->blacklist[0];
 				}
 
 				$citations = substr($content,0,$tmpResult[0]['pos']);
 				if($citations != ""){
-
 					$return['citations'] = explode(",",$citations);
+					if ($return['citations'][0] == $this->blacklist[1])
+    					$return['citations'] = array_slice($return['citations'], 1);
+    				if ($return['citations'][sizeof($return['citations'])-1] == $this->blacklist[0])
+    					$return['citations'] = array_slice($return['citations'], 0, -1);
+    				foreach ($return['citations'] as $key => $value) $return['citations'][$key] = $value . ',';
 				}
 		}
 
