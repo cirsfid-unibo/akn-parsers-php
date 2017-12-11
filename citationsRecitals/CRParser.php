@@ -70,7 +70,7 @@ class CRParser {
 		$number = $digit;
 
 		$patterns = array(
-			"recital" => "/(?P<num>\($number\))\s*\b[A-Z][a-z]+\b/",
+			"recital" => "/(?P<num>\($number\))\s*\b[A-Z][a-z]*\b/",
 		);
 
 		if (isset($localpatterns)) {
