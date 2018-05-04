@@ -47,11 +47,11 @@
 
 $rules = Array(
 
-	"main" => "/{{target}}|{{goal}}/",
+	"main" => "/{{target}}|{{goal}}/i",
 
-	"goal" => Array("[Ss][Dd][Gg] +(?P<goal_num>\d{1,2}\.?)"),
+	"goal" => Array("(goal|sdg) +(?P<goal_num>\d{1,2}\.?)"),
 	"target" => Array(
-		"[Ss][Dd][Gg] +(?P<target_num>\d{1,2}\.\w{1,2}(?:\.\d{1,2})?)",
+		"(target|sdg) +(?P<target_num>\d{1,2}\.\w{1,2}(?:\.\d{1,2})?)",
 		),
 );
 
