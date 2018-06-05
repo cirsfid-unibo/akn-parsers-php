@@ -82,6 +82,8 @@ class Paragraph {
     		$content = preg_replace($pattern, $replacement, $content);
     		$pattern = "/(?<=\(\([1-9][0-9]\)\)) (\w{1,2}(?:-\w+)?[\.\)])/u";
     		$content = preg_replace($pattern, $replacement, $content);
+    		$pattern = "/(?<=\([1-9][0-9]\)) (\w{1,2}(?:-\w+)?[\.\)])/u";
+    		$content = preg_replace($pattern, $replacement, $content);
     		/////////////////////////////////////////////////////////////////
     		/////////////////////////////////////////////////////////////////
     		//echo $content;
