@@ -8,10 +8,17 @@ class MinerService(BaseHTTPRequestHandler):
 	__resolution_re = re.compile(r'^Resolution\s(\d{1,2})/(\d{4})', re.M|re.I)
 	__adopted_re = re.compile(r'^\(?Adopted\son\s\d{1,2}\s[A-Za-z]+\s(\d{4})\)?', re.M|re.I)
 
+
+	def do_OPTIONS(self):
+		self.send_response(200, "ok")
+		self.send_header('Access-Control-Allow-Origin', '*')
+		self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+		self.send_header("Access-Control-Allow-Headers", "X-Requested-With, Content-type")
+
 	def do_POST(self):
 		content_length = int(self.headers['Content-Length'])
 		post_data = self.rfile.read(content_length)
-
+		post_data = post_data.decode('utf-8')
 		self.send_response(200)
 		self.send_header('Content-type','application/json')
 		self.send_header('Access-Control-Allow-Origin', '*')
@@ -19,7 +26,6 @@ class MinerService(BaseHTTPRequestHandler):
 		self.wfile.write(self.__mine(post_data))
 
 	def __mine(self,raw):
-		print raw
 		starts = [] ; ends = []
 		for i in self.__resolution_re.finditer(raw):
 			starts.append({"number" : i.group(1), "year" : i.group(2), "start" : (i.start())})
