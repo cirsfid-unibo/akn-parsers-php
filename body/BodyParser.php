@@ -63,10 +63,15 @@ class BodyParser {
     }
 
     public function parse($content, $jsonOutput = FALSE) {
-    	$return = array();
-    	if($this->lang && $this->docType && !empty($this->parserRules)) {
-    		$return = $this->parse_recursive($content, $this->context);
-    	} else {
+		$return = array();
+		$hierarchyIndex = 0;
+		$foundHeirarchyIndex = $this->context ? array_search($this->context, $this->parserRules["hierarchy"]) : FALSE;
+		if ($foundHeirarchyIndex !== FALSE) {
+			$hierarchyIndex = $foundHeirarchyIndex;
+		}
+		if($this->lang && $this->docType && !empty($this->parserRules)) {
+			$return = $this->parse_recursive($content, $hierarchyIndex);
+		} else {
 			$return = Array('success' => FALSE);
 		}
 

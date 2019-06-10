@@ -54,7 +54,7 @@ $string = stripcslashes(isset($_POST['s']) ? $_POST['s'] : "");
 $format = isset($_POST['f']) ? $_POST['f'] : "json";
 $lang = isset($_POST['l'])?$_POST['l']: TRUE;
 $documentType = isset($_POST['doctype'])? $_POST['doctype']:TRUE;
-$context = isset($_POST['context'])? $_POST['context']:0;
+$context = isset($_POST['context'])? $_POST['context']: FALSE;
 
 $parser = new BodyParser($lang, $documentType, $context);
 echo $parser->parse($string, TRUE);
